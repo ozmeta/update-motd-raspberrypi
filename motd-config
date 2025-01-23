@@ -7,5 +7,5 @@ COLON=":"
 # STYLES
 PRIMARY_STYLE="light_red;bold"
 SECONDARY_STYLE="light_green"
-TITLE_STYLE="white;bold"
-SUBTITLE_STYLE="gray"
+TITLE_STYLE="gray;bold"
+SUBTITLE_STYLE="light_black"

@@ -38,7 +38,7 @@ style_to_code() {
                 "blue") style_codes+=("34") ;;
                 "magenta") style_codes+=("35") ;;
                 "cyan") style_codes+=("36") ;;
-                "gray") style_codes+=("37") ;;
+                "gray"|"grey") style_codes+=("37") ;;
                 "lightblack") style_codes+=("90") ;;
                 "lightred") style_codes+=("91") ;;
                 "lightgreen") style_codes+=("92") ;;
@@ -79,7 +79,10 @@ inv_style_code() {
         # Loop through the style_codes and swap foreground to background
         for i in "${!style_codes[@]}"; do
             case ${style_codes[i]} in
-                3[0-7]|9[0-7]) ((style_codes[i]+=10)) ;; # Foreground to background
+                # Foreground to background
+                3[1-6]) ((style_codes[i]+=10)) ;;
+                30|90) ((style_codes[i]+=10)); style_codes[i]+=";37" ;; # Make foreground text white
+                37|9[1-7]) ((style_codes[i]+=10)); style_codes[i]+=";30" ;; # Make foreground text dark
                 *) ;; # Skip other values
             esac
         done
