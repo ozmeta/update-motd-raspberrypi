@@ -1,0 +1,9 @@
+# GENERAL
+DATE_FORMAT="%a %b %d %Y, %I:%M %p" # 24 Hour: "%a %b %d %Y %H:%M"
+ASCII_ART=true
+
+# STYLES
+PRIMARY_STYLE="light_red;bold"
+SECONDARY_STYLE="light_green"
+TITLE_STYLE="bold"
+SUBTITLE_STYLE="gray"
