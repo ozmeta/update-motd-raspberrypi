@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# Load the configuration file
+source "/etc/motd"
+
+# Fetch system information
+
+# Last
+read last_ip last_date <<< "$(last $whoami -n 1 -F | awk 'NR==1 {print $3, $4, $5, $6, $7, $8}')"
+
+# Uptime
+uptime=$(uptime -p | cut -c 4-)
+uptime_date=$(date -d "$(uptime -s)" +"$DATE_FORMAT")
+
+# Disk
+read disk_free disk_usage <<< "$(df -h --si / | awk 'NR==2 {print $4, $3 " / " $2}')"
+
+# Memory
+read mem_free mem_usage <<< "$(free -h --si | awk 'NR==2 {print $4, $3 " / " $2}')"
+
+# Temperature
+temp=$(vcgencmd measure_temp | awk -F"[=']" '{printf "%.1f°C", $2}')
+
+# CPU
+cpu_usage=$(awk '/^cpu /{u=$2;n=$3;s=$4;i=$5;w=$6;t=u+n+s+i+w;it=i+w;c=100*(t-it)/t;printf "%.2f%%", c}' /proc/stat)
+proc_count=$(ps -A --no-headers | wc -l)
+
+# Users
+user_count=$(who | wc -l)
+
+#IP
+ip=$(hostname -I)
+
+# Organize the information
+inf1="$(STYLE $TITLE "Last") $(STYLE $SUBTITLE "....")$(STYLE $TITLE "$COLON") $(STYLE $SECONDARY "$last_date") $(STYLE $SUBTITLE "$BULLET $last_ip")"
+inf2="$(STYLE $TITLE "Uptime") $(STYLE $SUBTITLE "..")$(STYLE $TITLE "$COLON") $(STYLE $SECONDARY "$uptime") $(STYLE $SUBTITLE "$BULLET $uptime_date")"
+inf3="$(STYLE $TITLE "Disk") $(STYLE $SUBTITLE "....")$(STYLE $TITLE "$COLON") $(STYLE $SECONDARY "$disk_free") $(STYLE $SUBTITLE "$BULLET $disk_usage")"
+inf4="$(STYLE $TITLE "Memory") $(STYLE $SUBTITLE "..")$(STYLE $TITLE "$COLON") $(STYLE $SECONDARY "$mem_free") $(STYLE $SUBTITLE "$BULLET $mem_usage")"
+inf5="$(STYLE $TITLE "Temp") $(STYLE $SUBTITLE "....")$(STYLE $TITLE "$COLON") $(STYLE $SECONDARY "$temp")"
+inf6="$(STYLE $TITLE "CPU") $(STYLE $SUBTITLE ".....")$(STYLE $TITLE "$COLON") $(STYLE $SECONDARY "$cpu_usage") $(STYLE $SUBTITLE "$BULLET $proc_count")"
+inf7="$(STYLE $TITLE "Users") $(STYLE $SUBTITLE "...")$(STYLE $TITLE "$COLON") $(STYLE $SECONDARY "$user_count")"
+inf8="$(STYLE $TITLE "IP") $(STYLE $SUBTITLE "......")$(STYLE $TITLE "$COLON") $(STYLE $SECONDARY "$ip")"
+
+# Print the system message
+if [ "$ASCII_BIT" = "1" ]; then
+    echo "   $(STYLE $SECONDARY "   .~~.   .~~.   ")"
+    echo "   $(STYLE $SECONDARY "  '. \ ' ' / .'  ")   $inf1"
+    echo "   $(STYLE $PRIMARY   "   .~ .~~~..~.   ")   $inf3"
+    echo "   $(STYLE $PRIMARY   "  : .~.'~'.~. :  ")   $inf5"
+    echo "   $(STYLE $PRIMARY   " ~ (   ) (   ) ~ ")   $inf7"
+    echo "   $(STYLE $PRIMARY   "( : '~'.~.'~' : )")   $inf2"
+    echo "   $(STYLE $PRIMARY   " ~ .~ (   ) ~. ~ ")   $inf4"
+    echo "   $(STYLE $PRIMARY   "  (  : '~' :  )  ")   $inf6"
+    echo "   $(STYLE $PRIMARY   "   '~ .~~~. ~'   ")   $inf8"
+    echo "   $(STYLE $PRIMARY   "       '~'       ")"
+else
+    echo -e "                                                              ${inf2}\r   ${inf1}"
+    echo -e "                                                              ${inf4}\r   ${inf3}"
+    echo -e "                                                              ${inf6}\r   ${inf5}"
+    echo -e "                                                              ${inf8}\r   ${inf7}"
+fi
