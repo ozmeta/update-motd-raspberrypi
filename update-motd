@@ -4,7 +4,7 @@
 CONFIG_FILE="/etc/motd-config"
 
 # Output file for the compiled MOTD
-OUTPUT_FILE="/etc/motd"
+OUTPUT_FILE="/etc/motd-compiled"
 
 if [ ! -f "$CONFIG_FILE" ]; then
     echo "The MOTD configuration file does not exist: $CONFIG_FILE"
@@ -127,7 +127,7 @@ cat <<EOF > "$OUTPUT_FILE"
 #!/bin/bash
 
 # THIS FILE IS AUTO-GENERATED. DO NOT EDIT!
-# Make your changes in the '/etc/motd-config' file and compile with \`sudo update-motd\` command.
+# Make your changes in the /etc/motd-config file and compile with \`sudo update-motd\` command.
 
 # Variables
 DATE_FORMAT="$DATE_FORMAT"
@@ -145,7 +145,7 @@ INV_SUBTITLE="$INV_SUBTITLE_CODE"
 
 # Functions
 STYLE() {
-    echo -e "$1$2\e[0m"
+    echo -e "\$1\$2\e[0m"
 }
 EOF
 

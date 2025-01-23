@@ -11,7 +11,7 @@ MOTD_CONFIG_SRC="./motd-config"
 MOTD_CONFIG_DEST="/etc/motd-config"
 UPDATE_MOTD_SRC="./update-motd"
 UPDATE_MOTD_DEST="/usr/bin/update-motd"
-UPDATE_MOTD_D_SRC="./update-motd.d/*"
+UPDATE_MOTD_D_SRC="./update-motd.d/"
 UPDATE_MOTD_D_DEST="/etc/update-motd.d/"
 
 # Remove any existing files to prevent confusion
@@ -36,7 +36,7 @@ chmod 755 "$UPDATE_MOTD_DEST"
 
 # Copy the update-motd.d scripts
 echo "Copying update-motd.d scripts to /etc/update-motd.d..."
-cp $UPDATE_MOTD_D_SRC "$UPDATE_MOTD_D_DEST"
+cp "$UPDATE_MOTD_D_SRC"* "$UPDATE_MOTD_D_DEST"
 chmod 755 "$UPDATE_MOTD_D_DEST"*
 
 # Run update-motd to compile for the first time with default settings
