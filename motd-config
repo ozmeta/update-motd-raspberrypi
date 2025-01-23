@@ -6,5 +6,5 @@ BULLET="❯"
 # STYLES
 PRIMARY_STYLE="light_red;bold"
 SECONDARY_STYLE="light_green"
-TITLE_STYLE="bold"
+TITLE_STYLE="white;bold"
 SUBTITLE_STYLE="gray"
