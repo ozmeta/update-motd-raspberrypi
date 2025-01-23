@@ -2,6 +2,7 @@
 DATE_FORMAT="%a %b %d %Y, %I:%M %p" # 24 Hour: "%a %b %d %Y %H:%M"
 ASCII_ART=true
 BULLET="❯"
+COLON=":"
 
 # STYLES
 PRIMARY_STYLE="light_red;bold"

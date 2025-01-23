@@ -105,6 +105,11 @@ if [ -z "$BULLET" ]; then
     BULLET="*"
 fi
 
+# Compile COLON character
+if [ -z "$COLON" ]; then
+    COLON=":"
+fi
+
 # Assign values to variables based on the code
 PRIMARY_CODE=$(style_to_code "$PRIMARY_STYLE")
 SECONDARY_CODE=$(style_to_code "$SECONDARY_STYLE")
@@ -128,6 +133,7 @@ cat <<EOF > "$OUTPUT_FILE"
 DATE_FORMAT="$DATE_FORMAT"
 ASCII_BIT="$ASCII_BIT"
 BULLET="$BULLET"
+COLON="$COLON"
 PRIMARY="$PRIMARY_CODE"
 SECONDARY="$SECONDARY_CODE"
 TITLE="$TITLE_CODE"
