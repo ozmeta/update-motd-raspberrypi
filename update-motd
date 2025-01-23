@@ -1,0 +1,135 @@
+#!/bin/bash
+
+# Path to the motd-config file
+CONFIG_FILE="/etc/motd-config"
+
+# Output file for the compiled MOTD
+OUTPUT_FILE="/etc/motd"
+
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "The MOTD configuration file does not exist: $CONFIG_FILE"
+    return 1
+fi
+
+# Read the motd-config settings
+source "$CONFIG_FILE"
+
+# Function to compile the style code (i.e., "red;bold" -> "\e[31;1m")
+style_to_code() {
+    # Remove all whitespace/underscore and convert to lowercase
+    local args=$(echo "$*" | tr -d '[:space:]_' | tr '[:upper:]' '[:lower:]')
+
+    # Split the style string by semicolon
+    IFS=';' read -ra style <<< "$args"
+
+    # Define return variable
+    local style_codes=()
+
+    # Check if the style array is non-empty before looping
+    if [ -n "$style" ]; then
+        # Loop through each style and add the corresponding code
+        for st in "${style[@]}"; do
+            case $st in
+                # Colors
+                "black") style_codes+=("30") ;;
+                "red") style_codes+=("31") ;;
+                "green") style_codes+=("32") ;;
+                "yellow") style_codes+=("33") ;;
+                "blue") style_codes+=("34") ;;
+                "magenta") style_codes+=("35") ;;
+                "cyan") style_codes+=("36") ;;
+                "gray") style_codes+=("37") ;;
+                "lightblack") style_codes+=("90") ;;
+                "lightred") style_codes+=("91") ;;
+                "lightgreen") style_codes+=("92") ;;
+                "lightyellow") style_codes+=("93") ;;
+                "lightblue") style_codes+=("94") ;;
+                "lightmagenta") style_codes+=("95") ;;
+                "lightcyan") style_codes+=("96") ;;
+                "white") style_codes+=("97") ;;
+
+                # Styles
+                "bold") style_codes+=("1") ;;
+                "italic") style_codes+=("3") ;;
+                "underline") style_codes+=("4") ;;
+
+                # Default
+                *) style_codes+=("0") ;;
+            esac
+        done
+    else
+        # If the styles array is empty, return reset style
+        style_codes+=("0")
+    fi
+
+    # Return the style codes joined by a semicolon
+    echo "\e[${style_codes[*]}m" | tr ' ' ';'
+}
+
+# Function to convert foreground color to background color (i.e., "\e[31;1m" -> "\e[41;1m")
+inv_style_code() {
+    local args=$(echo "$*" | tr -d '[:space:]_' | tr '[:upper:]' '[:lower:]')
+
+    # Check if the style code is valid
+    if [[ "$args" =~ \\e\[(.*)m ]]; then
+
+        local values="${BASH_REMATCH[1]}" # Extract the values
+        IFS=';' read -r -a style_codes <<< "$values"  # Split by ';'
+
+        # Loop through the style_codes and swap foreground to background
+        for i in "${!style_codes[@]}"; do
+            case ${style_codes[i]} in
+                3[0-7]|9[0-7]) ((style_codes[i]+=10)) ;; # Foreground to background
+                *) ;; # Skip other values
+            esac
+        done
+    fi
+
+    # Return the modified style code
+    echo "\e[${style_codes[*]}m" | tr ' ' ';'
+}
+
+# Compile the date format
+test_date_format=$(date +"$DATE_FORMAT" 2>/dev/null)
+# Check if the formatted date is empty
+if [ -z "$test_date_format" ]; then
+    # Set the default date format
+    DATE_FORMAT="%a %b %d %Y %H:%M"
+fi
+
+# Compile the ASCII art
+ASCII_BIT=$([[ "$ASCII_ART" =~ ^(true|yes|1)$ ]] && echo "1" || echo "0")
+
+# Assign values to variables based on the code
+PRIMARY_CODE=$(style_to_code "$PRIMARY_STYLE")
+SECONDARY_CODE=$(style_to_code "$SECONDARY_STYLE")
+TITLE_CODE=$(style_to_code "$TITLE_STYLE")
+SUBTITLE_CODE=$(style_to_code "$SUBTITLE_STYLE")
+
+# Modify color codes and define new inverted variables for background versions
+INV_PRIMARY_CODE=$(inv_style_code "$PRIMARY_CODE")
+INV_SECONDARY_CODE=$(inv_style_code "$SECONDARY_CODE")
+INV_TITLE_CODE=$(inv_style_code "$TITLE_CODE")
+INV_SUBTITLE_CODE=$(inv_style_code "$SUBTITLE_CODE")
+
+# Start writing the compiled MOTD
+cat <<EOF > "$OUTPUT_FILE"
+#!/bin/bash
+
+# THIS FILE IS AUTO-GENERATED. DO NOT EDIT!
+# Make your changes in the '/etc/motd-config' file and compile with \`sudo update-motd\` command.
+
+DATE_FORMAT="$DATE_FORMAT"
+ASCII_BIT=$ASCII_BIT
+PRIMARY="$PRIMARY_CODE"
+SECONDARY="$SECONDARY_CODE"
+TITLE="$TITLE_CODE"
+SUBTITLE="$SUBTITLE_CODE"
+INV_PRIMARY="$INV_PRIMARY_CODE"
+INV_SECONDARY="$INV_SECONDARY_CODE"
+INV_TITLE="$INV_TITLE_CODE"
+INV_SUBTITLE="$INV_SUBTITLE_CODE"
+EOF
+
+# Give execute permissions to the compiled MOTD file
+chmod +x "$OUTPUT_FILE"
