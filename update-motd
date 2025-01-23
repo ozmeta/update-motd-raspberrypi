@@ -132,7 +132,7 @@ INV_TITLE="$INV_TITLE_CODE"
 INV_SUBTITLE="$INV_SUBTITLE_CODE"
 
 # Functions
-COLOR() {
+STYLE() {
     echo -e "$1$2\e[0m"
 }
 EOF
