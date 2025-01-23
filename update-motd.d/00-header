@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Load the configuration file
+source "/etc/motd"
+
+# Fetch raspberry pi information
+model=$(cat /sys/firmware/devicetree/base/model)
+kernel=$(uname -sr)
+
+# Print the header message
+echo ""
+echo " $(STYLE $INV_TITLE " $model ")$(STYLE $INV_SUBTITLE " $kernel ")"
