@@ -119,6 +119,7 @@ cat <<EOF > "$OUTPUT_FILE"
 # THIS FILE IS AUTO-GENERATED. DO NOT EDIT!
 # Make your changes in the '/etc/motd-config' file and compile with \`sudo update-motd\` command.
 
+# Variables
 DATE_FORMAT="$DATE_FORMAT"
 ASCII_BIT=$ASCII_BIT
 PRIMARY="$PRIMARY_CODE"
@@ -129,6 +130,11 @@ INV_PRIMARY="$INV_PRIMARY_CODE"
 INV_SECONDARY="$INV_SECONDARY_CODE"
 INV_TITLE="$INV_TITLE_CODE"
 INV_SUBTITLE="$INV_SUBTITLE_CODE"
+
+# Functions
+COLOR() {
+    echo -e "$1$2\e[0m"
+}
 EOF
 
 # Give execute permissions to the compiled MOTD file
