@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Load the configuration file
+source "/etc/motd"
+
+# Fetch login information
+user=$(whoami)
+host=$(hostname)
+login_date=$(date +"$DATE_FORMAT")
+
+# Print the welcome message
+echo ""
+echo " $BULLET Welcome $(STYLE $INV_PRIMARY " $user ") to $(STYLE $PRIMARY "$host") $(STYLE $SUBTITLE "at $login_date")"
+echo ""
