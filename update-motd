@@ -100,6 +100,11 @@ fi
 # Compile the ASCII art
 ASCII_BIT=$([[ "$ASCII_ART" =~ ^(true|yes|1)$ ]] && echo "1" || echo "0")
 
+# Compile BULLET character
+if [ -z "$BULLET" ]; then
+    BULLET="*"
+fi
+
 # Assign values to variables based on the code
 PRIMARY_CODE=$(style_to_code "$PRIMARY_STYLE")
 SECONDARY_CODE=$(style_to_code "$SECONDARY_STYLE")
@@ -121,7 +126,8 @@ cat <<EOF > "$OUTPUT_FILE"
 
 # Variables
 DATE_FORMAT="$DATE_FORMAT"
-ASCII_BIT=$ASCII_BIT
+ASCII_BIT="$ASCII_BIT"
+BULLET="$BULLET"
 PRIMARY="$PRIMARY_CODE"
 SECONDARY="$SECONDARY_CODE"
 TITLE="$TITLE_CODE"
