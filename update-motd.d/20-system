@@ -7,6 +7,7 @@ source "/etc/motd-compiled"
 
 # Last
 read last_ip last_date <<< "$(last $whoami -n 1 -F | awk 'NR==1 {print $3, $4, $5, $6, $7, $8}')"
+last_date=$(date -d "$last_date" +"$DATE_FORMAT")
 
 # Uptime
 uptime=$(uptime -p | cut -c 4-)
