@@ -103,12 +103,18 @@ fi
 # Compile the ASCII art
 ASCII_BIT=$([[ "$ASCII_ART" =~ ^(true|yes|1)$ ]] && echo "1" || echo "0")
 
-# Compile BULLET character
+# Compile the PACKAGE_MANAGER
+case "$PACKAGE_MANAGER" in
+    apt|apt-get|dnf|zypper|pacman) ;;
+    *) PACKAGE_MANAGER="" ;;
+esac
+
+# Compile the BULLET character
 if [ -z "$BULLET" ]; then
     BULLET="*"
 fi
 
-# Compile COLON character
+# Compile the COLON character
 if [ -z "$COLON" ]; then
     COLON=":"
 fi
@@ -135,6 +141,7 @@ cat <<EOF > "$OUTPUT_FILE"
 # Variables
 DATE_FORMAT="$DATE_FORMAT"
 ASCII_BIT="$ASCII_BIT"
+PACKAGE_MANAGER="$PACKAGE_MANAGER"
 BULLET="$BULLET"
 COLON="$COLON"
 PRIMARY="$PRIMARY_CODE"

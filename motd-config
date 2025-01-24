@@ -1,6 +1,7 @@
 # GENERAL
 DATE_FORMAT="%a %b %d %Y, %I:%M %p" # 24 Hour: "%a %b %d %Y %H:%M"
-ASCII_ART=true
+ASCII_ART="true"
+PACKAGE_MANAGER="apt" # apt, dnf, zypper, pacman
 BULLET="❯"
 COLON=":"
 

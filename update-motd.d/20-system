@@ -59,3 +59,4 @@ else
     echo -e "                                                              ${inf7}\r   ${inf3}"
     echo -e "                                                              ${inf8}\r   ${inf4}"
 fi
+echo ""

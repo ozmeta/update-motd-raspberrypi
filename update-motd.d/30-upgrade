@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Load the configuration file
+source "/etc/motd-compiled"
+
+# Fetch up_count
+up_count="0"
+
+case "$PACKAGE_MANAGER" in
+    apt)
+        # Check for updates
+        up_count=$(apt list --upgradable -qq 2>/dev/null | wc -l)
+        ;;
+    dnf)
+        # Check for updates
+        ;;
+    zypper)
+        # Check for updates
+        ;;
+    pacman)
+        # Check for updates
+        ;;
+    *)
+        ;;
+esac
+
+# Colors
+color="$SUBTITLE"
+inv_color="$INV_SUBTITLE"
+
+# Pluralize
+s="s"
+
+# Check if there are updates
+if [ "$up_count" -gt 0 ]; then
+    # Change the color
+    color="$PRIMARY"
+    inv_color="$INV_PRIMARY"
+
+    # Singularize
+    if [ "$up_count" -eq 1 ]; then
+        s=""
+    fi
+fi
+
+# OUTPUT
+echo " $(STYLE $color "$BULLET") $(STYLE $inv_color " $up_count ") $(STYLE $color "package$s can be upgraded")"
+echo ""
