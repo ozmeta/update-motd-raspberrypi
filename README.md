@@ -9,6 +9,9 @@ This repository contains scripts and configurations to update the Message of the
 - [Applying Configuration](#applying-configuration)
 - [License](#license)
 
+## Screenshots
+![Screenshot 1](assets/screenshots/screenshot1.png)
+
 ## Installation
 
 To install the update-motd scripts on your Raspberry Pi, follow these steps:
