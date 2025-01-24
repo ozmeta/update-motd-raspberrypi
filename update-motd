@@ -81,8 +81,8 @@ inv_style_code() {
             case ${style_codes[i]} in
                 # Foreground to background
                 3[1-6]) ((style_codes[i]+=10)) ;;
-                30|90) ((style_codes[i]+=10)); style_codes[i]+=";37" ;; # Make foreground text white
-                37|9[1-7]) ((style_codes[i]+=10)); style_codes[i]+=";30" ;; # Make foreground text dark
+                30) ((style_codes[i]+=10)); style_codes[i]+=";37" ;; # Make foreground text white
+                37|9[0-7]) ((style_codes[i]+=10)); style_codes[i]+=";30" ;; # Make foreground text black
                 *) ;; # Skip other values
             esac
         done
