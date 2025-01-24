@@ -21,7 +21,7 @@ To install the update-motd scripts on your Raspberry Pi, follow these steps:
 
 2. Run the installation script:
     ```sh
-    sudo ./install.sh
+    sudo bash install.sh
     ```
 
 ## Structure

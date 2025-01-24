@@ -4,7 +4,7 @@
 source "/etc/motd-compiled"
 
 # Fetch login information
-user=$(whoami)
+user=$(logname)
 host=$(hostname)
 login_date=$(date +"$DATE_FORMAT")
 
