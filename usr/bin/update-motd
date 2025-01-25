@@ -80,8 +80,14 @@ inv_style_code() {
         for i in "${!style_codes[@]}"; do
             case ${style_codes[i]} in
                 # Foreground to background
-                3[0-6]) ((style_codes[i]+=10)); style_codes[i]+=";97" ;; # Make foreground text white
-                37|9[0-7]) ((style_codes[i]+=10)); style_codes[i]+=";30" ;; # Make foreground text black
+                3[0-6])
+                    ((style_codes[i]+=10))
+                    style_codes[i]+=";97" # Make foreground text white
+                    ;;
+                37|9[0-7])
+                    ((style_codes[i]+=10))
+                    style_codes[i]+=";30" # Make foreground text black
+                    ;;
                 *) ;; # Skip other values
             esac
         done
@@ -102,11 +108,20 @@ fi
 # Compile the ASCII art
 ASCII_BIT=$([[ "$ASCII_ART" =~ ^(true|yes|1)$ ]] && echo "1" || echo "0")
 
-# Compile the PACKAGE_MANAGER
-case "$PACKAGE_MANAGER" in
-    apt|apt-get|dnf|zypper|pacman) ;;
-    *) PACKAGE_MANAGER="" ;;
-esac
+# Compile the update count command
+if [ -z "$UP_COUNT_CMD" ]; then
+    if command -v apt &>/dev/null; then
+        UP_COUNT_CMD="apt list --upgradable -qq 2>/dev/null | wc -l"
+    elif command -v dnf &>/dev/null; then
+        UP_COUNT_CMD="dnf check-update --quiet | grep -c '^'"
+    elif command -v pacman &>/dev/null; then
+        UP_COUNT_CMD="pacman -Qu | wc -l"
+    elif command -v zypper &>/dev/null; then
+        UP_COUNT_CMD="zypper list-updates | grep -c '^v'"
+    else
+        UP_COUNT_CMD="echo '0'"
+    fi
+fi
 
 # Compile the BULLET character
 if [ -z "$BULLET" ]; then
@@ -140,7 +155,7 @@ cat <<EOF > "$OUTPUT_FILE"
 # Variables
 DATE_FORMAT="$DATE_FORMAT"
 ASCII_BIT="$ASCII_BIT"
-PACKAGE_MANAGER="$PACKAGE_MANAGER"
+UP_COUNT_CMD="$UP_COUNT_CMD"
 BULLET="$BULLET"
 COLON="$COLON"
 PRIMARY="$PRIMARY_CODE"
