@@ -4,7 +4,7 @@
 source "/etc/motd-compiled"
 
 # Fetch raspberry pi information
-model=$(cat /sys/firmware/devicetree/base/model)
+model=$(cat /sys/firmware/devicetree/base/model | tr -d '\0')
 kernel=$(uname -sr)
 
 # Print the header message
