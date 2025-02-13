@@ -10,7 +10,7 @@ read last_ip last_date <<< "$(last $logname -n 1 -F | awk 'NR==1 {print $3, $4, 
 last_date=$(date -d "$last_date" +"$DATE_FORMAT")
 
 # Uptime
-uptime=$(uptime -p | cut -c 4-)
+uptime=$(awk '{print int($1/86400) " days"}' /proc/uptime)
 uptime_date=$(date -d "$(uptime -s)" +"$DATE_FORMAT")
 
 # Disk
